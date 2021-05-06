@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/RalapZ/dingtalkldap/model"
-	"github.com/RalapZ/dingtalkldap/service"
+	"github.com/RalapZ/dingtalkopenldap/model"
+	"github.com/RalapZ/dingtalkopenldap/service"
 	"strconv"
 )
 

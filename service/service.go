@@ -3,7 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/RalapZ/dingtalkldap/model"
+	"github.com/RalapZ/dingtalkopenldap/model"
 	"io/ioutil"
 	"net/http"
 )
