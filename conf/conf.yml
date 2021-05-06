@@ -1,0 +1,11 @@
+conf:
+  listen:
+    host: 127.0.0.1     #  listening ip or host name
+    port: 9000          #  listening port
+  log:
+    error_log:
+      level: warn       # supports levels, lower to higher: debug, info, warn, error, panic, fatal
+      file_path: logs/error.log
+authentication:
+  AppKey:
+  AppSecret:
