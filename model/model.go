@@ -1,7 +1,7 @@
 package model
 
 var (
-	Token string
+	Token  string
 	METHOD = "get"
 )
 
@@ -45,8 +45,17 @@ type DepDetailInfo struct {
 	UserPermits         []interface{} `json:"user_permits"`
 }
 type ResponseDepDetailInter struct {
-	Errcode int    `json:"errcode"`
-	Errmsg  string `json:"errmsg"`
-	Result  DepDetailInfo `json:"result"`
+	Errcode   int           `json:"errcode"`
+	Errmsg    string        `json:"errmsg"`
+	Result    DepDetailInfo `json:"result"`
+	RequestId string        `json:"request_id"`
+}
+
+type ResponseDepListSubId struct {
+	Errcode int `json:"errcode"`
+	Result  struct {
+		DeptIdList []int `json:"dept_id_list"`
+	} `json:"result"`
+	Errmsg    string `json:"errmsg"`
 	RequestId string `json:"request_id"`
 }
