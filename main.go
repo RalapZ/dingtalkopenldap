@@ -28,5 +28,5 @@ func main() {
 		//fmt.Printf("%+#v\n",subdetail)
 	}
 
-	GetListSubId
+	//GetListSubId
 }

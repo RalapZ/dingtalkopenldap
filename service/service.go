@@ -10,19 +10,18 @@ import (
 
 var DDtoken string
 
-
-func UrlRequest(method string, url string,body *map[interface{}]interface{}) []byte {
+func UrlRequest(method string, url string, body *map[interface{}]interface{}) []byte {
 	C := &http.Client{}
 	resq, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
 	//defer resq.Body.Close()
-	if body == nil{
+	if body == nil {
 		fmt.Println("body is null")
-	}else{
-		for k,v := range *body{
-			fmt.Println(k,v)
+	} else {
+		for k, v := range *body {
+			fmt.Println(k, v)
 		}
 		//resq.Header.Add()
 	}
@@ -40,7 +39,7 @@ func UrlRequest(method string, url string,body *map[interface{}]interface{}) []b
 }
 
 func GetToken(method string, url string) {
-	str := UrlRequest(method, url,nil)
+	str := UrlRequest(method, url, nil)
 	json_info := model.Tokenstr{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
@@ -51,20 +50,20 @@ func GetToken(method string, url string) {
 	//return token
 }
 
-func GetListSubId(method string,DepID int, url string) {
-	body:= map[interface{}]interface{}
-	body["dept_id"]=DepID
-	str := UrlRequest(method, url,&body)
-	json_info := model.ResponseDepListSubId{}
-	err := json.Unmarshal(str, &json_info)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(str)
-}
+//func GetListSubId(method string,DepID int, url string) {
+//	body:= map[interface{}]interface{}
+//	body["dept_id"]=DepID
+//	str := UrlRequest(method, url,&body)
+//	json_info := model.ResponseDepListSubId{}
+//	err := json.Unmarshal(str, &json_info)
+//	if err != nil {
+//		fmt.Println(err)
+//	}
+//	fmt.Println(str)
+//}
 
 func GetListSub(method string, url string) []model.SubInfo {
-	str := UrlRequest(method, url,nil)
+	str := UrlRequest(method, url, nil)
 	json_info := model.ListSubInfo{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
@@ -76,7 +75,7 @@ func GetListSub(method string, url string) []model.SubInfo {
 }
 
 func GetSubDetailInfo(method string, url string) model.DepDetailInfo {
-	str := UrlRequest(method, url,nil)
+	str := UrlRequest(method, url, nil)
 	json_info := model.DepDetailInfo{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
