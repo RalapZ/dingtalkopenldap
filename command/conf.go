@@ -24,7 +24,7 @@ type User struct {
 
 type Authentication struct {
 	AppKey    string `yaml:"appkey"`
-	AppSecret int    `yaml:"appsecret"`
+	AppSecret string    `yaml:"appsecret"`
 }
 
 type Listen struct {
@@ -48,6 +48,7 @@ type DBConfig struct {
 type Config struct {
 	Listen     `yaml:"listen"`
 	LdapConfig `yaml:"ldap"`
+	Authentication  `yaml:"authentication"`
 	DBConfig   `yaml:"DB"`
 }
 
@@ -67,7 +68,13 @@ func setConf() {
 		if err != nil {
 			log.Printf("conf: %s, error: %v", configurationContent, err)
 		}
-		fmt.Println(config)
+		//fmt.Println(config)
+		//AuthConf=conf
+
+		Listenconfig=config.Listen
+		Authconfig=config.Authentication
+		Ldapconfig=config.LdapConfig
+		DBconfig=config.DBConfig
 		// listen
 		//if config. != 0 {
 		//	ServerPort = config.Conf.Listen.Port

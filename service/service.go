@@ -8,6 +8,9 @@ import (
 	"net/http"
 )
 
+
+var DDtoken string
+
 func UrlRequest(method string, url string) []byte {
 	C := &http.Client{}
 	resq, err := http.NewRequest(method, url, nil)
@@ -28,16 +31,16 @@ func UrlRequest(method string, url string) []byte {
 	return str
 }
 
-func GetToken(method string, url string) string {
+func GetToken(method string, url string)  {
 	str := UrlRequest(method, url)
 	json_info := model.Tokenstr{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
 		fmt.Println(err)
 	}
-	token := json_info.Access_token
+	//token := json_info.Access_token
 	model.Token = json_info.Access_token
-	return token
+	//return token
 }
 
 func GetListSub(method string, url string) []model.SubInfo {
@@ -63,3 +66,5 @@ func GetSubDetailInfo(method string, url string) model.DepDetailInfo {
 	//DepartmentInfo:=
 	return json_info
 }
+
+
