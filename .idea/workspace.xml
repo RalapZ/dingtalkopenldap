@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="422abdc5-126f-4d9c-8157-7e200aae1cc5" name="Default Changelist" comment="config  file">
-      <change beforePath="$PROJECT_DIR$/command/conf.go" beforeDir="false" afterPath="$PROJECT_DIR$/command/conf.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf/conf.yml" beforeDir="false" afterPath="$PROJECT_DIR$/conf/conf.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +16,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file://C:/Program Files/Go1.15" />
+  <component name="GOROOT" url="file:///usr/local/go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -33,6 +30,9 @@
   </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="ugls86h1" />
   </component>
   <component name="ProjectId" id="1rk9kWvzKbDWyIVckZyPTXhHhFE" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -54,7 +54,7 @@
     <property name="configurable..is.expanded" value="true" />
     <property name="configurable.GoLibrariesConfigurable.is.expanded" value="true" />
     <property name="go.import.settings.migrated" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../apisix/apisix-dashboard-2.5" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -62,13 +62,15 @@
     <property name="settings.editor.selected.configurable" value="go.vgo" />
   </component>
   <component name="RunManager" selected="Go Build.go build main.go">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -117,6 +119,7 @@
       <workItem from="1620292462244" duration="116000" />
       <workItem from="1620292590002" duration="51000" />
       <workItem from="1620292665522" duration="13948000" />
+      <workItem from="1620526393503" duration="1863000" />
     </task>
     <task id="LOCAL-00001" summary="first">
       <created>1620289989661</created>
@@ -172,6 +175,7 @@
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
+    <auto-vendoring-mode>false</auto-vendoring-mode>
     <environment>
       <map>
         <entry key="GOPROXY" value="https://goproxy.io,direct" />

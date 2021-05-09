@@ -15,7 +15,7 @@ func main() {
 	service.GetToken(method, Url_token)
 	fmt.Println(model.Token)
 
-	//获取所有部门信息
+	//获取所有部门信息https://oapi.dingtalk.com/topapi/v2/department/listsub
 	UrlListSub := "https://oapi.dingtalk.com/department/list?access_token=" + model.Token
 	sub := service.GetListSub(method, UrlListSub)
 	fmt.Println(sub)
