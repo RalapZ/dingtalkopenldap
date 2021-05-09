@@ -2,7 +2,8 @@ package model
 
 import (
 	"fmt"
-	"github.com/go-ldap/ldap/v3"
+	//"github.com/go-ldap/ldap/v3"
+	"gopkg.in/ldap.v2"
 )
 
 //var LdapConn *ldap.Conn
