@@ -71,6 +71,7 @@ func setConf() {
 			log.Printf("conf: %s, error: %v", configurationContent, err)
 		}
 		//fmt.Println(config)
+		//fmt.Println(config)
 		//AuthConf=conf
 
 		Listenconfig =config.Listen

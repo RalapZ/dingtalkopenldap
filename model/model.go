@@ -13,6 +13,11 @@ const (
 	GetDepDetailUrl = "https://oapi.dingtalk.com/topapi/v2/department/get"   //获取部门详细信息接口
 )
 
+type LDAP  interface{
+	AddGroupinfo()
+	AddUserinfo()
+}
+
 var (
 	Token             string                                    //接口token信息
 	METHOD                = "GET"                               //请求方法
@@ -29,13 +34,8 @@ type Tokenstr struct {
 }
 
 
-
-
-
-
 func UrlRequest(method string, url string, body *map[string]interface{}) []byte {
 	C := &http.Client{}
-	//bodyinfo:=nil
 	var bodyinfo io.Reader=nil
 	if body != nil {
 		for k, v := range *body {

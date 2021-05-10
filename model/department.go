@@ -10,13 +10,16 @@ import (
 var(
 	DepListId             =make(map[int][]int)                  //department 子列表信息
 	DepListDetailInfo     =make(map[int]DepDetailInfo)          //department 详细信息
+	ChanageDepDetailch    chan *ChanageDepDetailInfo
+	StackDepmentinfo    []string
 )
 
-type ListSubInfo struct {
+type ResponseListSubInfo struct {
 	Errcode    int       `json:"errcode"`
 	Errmsg     string    `json:"errmsg"`
 	Department []SubInfo `json:"department"`
 }
+
 
 type SubInfo struct {
 	CreateDeptGroup bool   `json:"createDeptGroup"`
@@ -25,7 +28,7 @@ type SubInfo struct {
 	AutoAddUser     bool   `json:"autoAddUser"`
 	Parentid        int    `json:"parentid"`
 }
-
+//department 详细信息
 type DepDetailInfo struct {
 	AutoAddUser         bool          `json:"auto_add_user"`
 	CreateDeptGroup     bool          `json:"create_dept_group"`
@@ -43,6 +46,13 @@ type DepDetailInfo struct {
 	ParentId            int           `json:"parent_id"`
 	UserPermits         []interface{} `json:"user_permits"`
 }
+
+type ChanageDepDetailInfo struct{
+	Action string
+	Departinfo *DepDetailInfo
+}
+
+//department接口返回信息
 type ResponseDepDetailInter struct {
 	Errcode   int           `json:"errcode"`
 	Errmsg    string        `json:"errmsg"`
@@ -50,6 +60,7 @@ type ResponseDepDetailInter struct {
 	RequestId string        `json:"request_id"`
 }
 
+//department 子列表信息
 type ResponseDepListSubId struct {
 	Errcode int `json:"errcode"`
 	Result  struct {
@@ -58,6 +69,8 @@ type ResponseDepListSubId struct {
 	Errmsg    string `json:"errmsg"`
 	RequestId string `json:"request_id"`
 }
+
+
 
 
 //初始化组织信息的结构内存map信息,   待补充并发初始化数据
@@ -71,18 +84,30 @@ func InitListSubId(method string,DepID int, url string) {
 		log.Println(err)
 	}
 	DepListId[DepID]=json_info.Result.DeptIdList //更新部门子部门map信息
-
 	info, err := GetSubDetailInfo("POST", DepID)
 	if err!=nil{
 		log.Println(err)
 		//return
 	}
-	DepListDetailInfo[DepID] = info.Result       //更新部门部门详细信息到map
-
+	if _,ok:=DepListDetailInfo[DepID];!ok{
+		StackDepmentinfo= append(StackDepmentinfo, info.Result.Name)
+		//fmt.Println(StackDepmentinfo)
+		DepListDetailInfo[DepID] = info.Result
+		LDAPservice.AddGroupinfo(DepListDetailInfo[DepID])
+		//temp:=&ChanageDepDetailInfo{"Add",DepListDetailInfo[DepID]}
+		//ChanageDepDetailch<-temp
+	}
+	//更新部门部门详细信息到map
 	for _,v:=range json_info.Result.DeptIdList{
 		InitListSubId(method,v,url)
+		StackDepmentinfo= StackDepmentinfo[:len(StackDepmentinfo)-1]
 	}
+	//fmt.Println("stack info",StackDepmentinfo)
 }
+
+//func Add
+
+
 
 
 
@@ -104,7 +129,7 @@ func GetListSubId(method string,DepID int, url string) {
 
 func GetListSub(method string, url string) []SubInfo {
 	str := UrlRequest(method, url, nil)
-	json_info := ListSubInfo{}
+	json_info := ResponseListSubInfo{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
 		log.Println(err)
