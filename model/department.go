@@ -45,6 +45,7 @@ type DepDetailInfo struct {
 	OuterPermitUsers    []interface{} `json:"outer_permit_users"`
 	ParentId            int           `json:"parent_id"`
 	UserPermits         []interface{} `json:"user_permits"`
+	LdapDepPath         []string
 }
 
 type ChanageDepDetailInfo struct{
@@ -70,9 +71,6 @@ type ResponseDepListSubId struct {
 	RequestId string `json:"request_id"`
 }
 
-
-
-
 //初始化组织信息的结构内存map信息,   待补充并发初始化数据
 func InitListSubId(method string,DepID int, url string) {
 	body:= make(map[string]interface{})
@@ -87,28 +85,19 @@ func InitListSubId(method string,DepID int, url string) {
 	info, err := GetSubDetailInfo("POST", DepID)
 	if err!=nil{
 		log.Println(err)
-		//return
 	}
 	if _,ok:=DepListDetailInfo[DepID];!ok{
 		StackDepmentinfo= append(StackDepmentinfo, info.Result.Name)
-		//fmt.Println(StackDepmentinfo)
+		info.Result.LdapDepPath=StackDepmentinfo
 		DepListDetailInfo[DepID] = info.Result
 		LDAPservice.AddGroupinfo(DepListDetailInfo[DepID])
-		//temp:=&ChanageDepDetailInfo{"Add",DepListDetailInfo[DepID]}
-		//ChanageDepDetailch<-temp
 	}
 	//更新部门部门详细信息到map
 	for _,v:=range json_info.Result.DeptIdList{
 		InitListSubId(method,v,url)
 		StackDepmentinfo= StackDepmentinfo[:len(StackDepmentinfo)-1]
 	}
-	//fmt.Println("stack info",StackDepmentinfo)
 }
-
-//func Add
-
-
-
 
 
 //获取列表信息
@@ -116,7 +105,6 @@ func GetListSubId(method string,DepID int, url string) {
 	body:= make(map[string]interface{})
 	body["dept_id"]=DepID
 	str := UrlRequest(method, url,&body)
-	//body_json := err2
 	json_info := ResponseDepListSubId{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
@@ -125,18 +113,13 @@ func GetListSubId(method string,DepID int, url string) {
 }
 
 
-
-
 func GetListSub(method string, url string) []SubInfo {
 	str := UrlRequest(method, url, nil)
 	json_info := ResponseListSubInfo{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
 		log.Println(err)
-		log.Println(err)
 	}
-	//token:=json_info.Access_token
-	//DepartmentInfo:=
 	return json_info.Department
 }
 
@@ -152,7 +135,5 @@ func GetSubDetailInfo(method string,DepID int) (ResponseDepDetailInter,error) {
 		log.Println("getting department detail information is something wrong",DepID)
 		return json_info,errors.New("getting department detail information is something wrong"+strconv.Itoa(DepID))
 	}
-	//token:=json_info.Access_token
-	//DepartmentInfo:=
 	return json_info,nil
 }

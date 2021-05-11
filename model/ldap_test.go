@@ -29,7 +29,7 @@ func TestInitLdapConnection(t *testing.T) {
 	//}
 	//sr.Print()
 	//InitLdapConnection()
-	LDAPservice.AddGroupinfo()
+	//LDAPservice.AddGroupinfo()
 
 	//sql := ldap.NewAddRequest("uid=test,ou=people,ou=it,dc=asinking,dc=com")
 	////sql := ldap.NewAddRequest("ou=供应链组,ou=产品部,ou=Staff,ou=Groups,o=AsinKing,dc=asinking,dc=com")
