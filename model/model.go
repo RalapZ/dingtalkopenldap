@@ -11,13 +11,20 @@ import (
 const (
 	GetTokenUrl = "https://oapi.dingtalk.com/gettoken"                     //获取token信息接口
 	GetDepDetailUrl = "https://oapi.dingtalk.com/topapi/v2/department/get"   //获取部门详细信息接口
+	GetUserListUrl="https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/queryonjob"    //获取用户list信息
+	GetUserDetailUrl="https://oapi.dingtalk.com/topapi/v2/user/get"  //获取部门详细信息
+
 )
+
+type LDAP  interface{
+	AddGroupinfo()
+	AddUserinfo()
+}
 
 var (
 	Token             string                                    //接口token信息
-	METHOD                = "GET"                               //请求方法
-
-	DepID             int =1                                    //默认department ID信息
+	METHOD            = "GET"                               //请求方法
+	DepID             =1                                    //默认department ID信息
 )
 
 type Tokenstr struct {
@@ -29,13 +36,8 @@ type Tokenstr struct {
 }
 
 
-
-
-
-
 func UrlRequest(method string, url string, body *map[string]interface{}) []byte {
 	C := &http.Client{}
-	//bodyinfo:=nil
 	var bodyinfo io.Reader=nil
 	if body != nil {
 		for k, v := range *body {
@@ -48,6 +50,7 @@ func UrlRequest(method string, url string, body *map[string]interface{}) []byte 
 			bodyinfo=bytes.NewReader(json_body)
 		}
 	}
+
 	resq, err := http.NewRequest(method, url, bodyinfo)
 	if err != nil {
 		log.Println(err)
@@ -66,8 +69,9 @@ func UrlRequest(method string, url string, body *map[string]interface{}) []byte 
 	return str
 }
 
-func GetToken(method string, url string) {
-	str := UrlRequest(method, url, nil)
+func GetToken(method string) {
+	Url_token:=GetTokenUrl+"?appkey="+ Authconfig.AppKey+"&appsecret=" + Authconfig.AppSecret
+	str := UrlRequest(method, Url_token, nil)
 	json_info := Tokenstr{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
@@ -77,4 +81,7 @@ func GetToken(method string, url string) {
 	Token = json_info.Access_token
 	//return token
 }
+
+
+
 

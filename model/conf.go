@@ -15,6 +15,7 @@ var (
 	Authconfig   Authentication
 	Ldapconfig   LdapConfig
 	DBconfig     DBConfig
+	Defaultconfig DefaultConfig
 )
 
 type User struct {
@@ -47,7 +48,13 @@ type DBConfig struct {
 	DBName   string `yaml:"dbname"`
 }
 
+type  DefaultConfig struct{
+	StatusList string `yaml:"status_list"`
+	UserOffset string `yaml:"user_offset"`
+}
+
 type Config struct {
+	DefaultConfig  `yaml:"default"`
 	Listen         `yaml:"listen"`
 	LdapConfig     `yaml:"ldap"`
 	Authentication `yaml:"authentication"`
@@ -71,8 +78,9 @@ func setConf() {
 			log.Printf("conf: %s, error: %v", configurationContent, err)
 		}
 		//fmt.Println(config)
+		//fmt.Println(config)
 		//AuthConf=conf
-
+		Defaultconfig=config.DefaultConfig
 		Listenconfig =config.Listen
 		Authconfig =config.Authentication
 		Ldapconfig =config.LdapConfig
