@@ -28,5 +28,4 @@ func InitLdap(){
 	for k,v:=range model.UserListDetailInfo{
 		log.Println(k,v)
 	}
-
 }
