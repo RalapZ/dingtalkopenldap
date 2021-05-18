@@ -22,30 +22,30 @@ type ResponseListSubInfo struct {
 
 
 type SubInfo struct {
-	CreateDeptGroup bool   `json:"createDeptGroup"`
-	Name            string `json:"name"`
-	Id              int    `json:"id"`
-	AutoAddUser     bool   `json:"autoAddUser"`
-	Parentid        int    `json:"parentid"`
+	CreateDeptGroup bool   `json:"createDeptGroup"` //是否同步创建一个关联此部门的企业群： true：创建false：不创建
+	Name            string `json:"name"`           //部门名称
+	Id              int    `json:"id"`             //部门ID
+	AutoAddUser     bool   `json:"autoAddUser"`     //部门群已经创建后，有新人加入部门是否会自动加入该群： true：会自动入群false：不会
+	Parentid        int    `json:"parentid"`       //父部门ID。
 }
 //department 详细信息
 type DepDetailInfo struct {
-	AutoAddUser         bool          `json:"auto_add_user"`
-	CreateDeptGroup     bool          `json:"create_dept_group"`
-	DeptGroupChatId     string        `json:"dept_group_chat_id"`
-	DeptId              int           `json:"dept_id"`
-	DeptPermits         []interface{} `json:"dept_permits"`
-	GroupContainSubDept bool          `json:"group_contain_sub_dept"`
-	HideDept            bool          `json:"hide_dept"`
-	Name                string        `json:"name"`
-	Order               int           `json:"order"`
-	OrgDeptOwner        string        `json:"org_dept_owner"`
-	OuterDept           bool          `json:"outer_dept"`
-	OuterPermitDepts    []interface{} `json:"outer_permit_depts"`
-	OuterPermitUsers    []interface{} `json:"outer_permit_users"`
-	ParentId            int           `json:"parent_id"`
-	UserPermits         []interface{} `json:"user_permits"`
-	LdapDepPath         []string
+	AutoAddUser         bool          `json:"auto_add_user"`     //当部门群已经创建后，是否有新人加入部门会自动加入该群： true：自动加入群 false：不会自动加入群
+	CreateDeptGroup     bool          `json:"create_dept_group"`      //是否同步创建一个关联此部门的企业群：  true：创建 false：不创建
+	DeptGroupChatId     string        `json:"dept_group_chat_id"`    //部门群ID
+	DeptId              int           `json:"dept_id"`              //部门ID
+	DeptPermits         []interface{} `json:"dept_permits"`         //当隐藏本部门时（即hide_dept为true时），配置的允许在通讯录中查看本部门的部门列表。
+	GroupContainSubDept bool          `json:"group_contain_sub_dept"`    //部门群是否包含子部门： true：包含false：不包含
+	HideDept            bool          `json:"hide_dept"`              //是否隐藏本部门： true：隐藏部门，隐藏后本部门将不会显示在公司通讯录中 false：显示部门
+	Name                string        `json:"name"`                //部门名称
+	Order               int           `json:"order"`               //在父部门中的次序值
+	OrgDeptOwner        string        `json:"org_dept_owner"`      //企业群群主ID。
+	OuterDept           bool          `json:"outer_dept"`          // 是否限制本部门成员查看通讯录：true：开启限制。开启后本部门成员只能看到限定范围内的通讯录false：不限制
+	OuterPermitDepts    []interface{} `json:"outer_permit_depts"` // 当限制部门成员的通讯录查看范围时（即outer_dept为true时），配置的部门员工可见部门列表。
+	OuterPermitUsers    []interface{} `json:"outer_permit_users"`  //当限制部门成员的通讯录查看范围时（即outer_dept为true时），配置的部门员工可见员工列表。
+	ParentId            int           `json:"parent_id"`              //父部门ID
+	UserPermits         []interface{} `json:"user_permits"`         //当隐藏本部门时（即hide_dept为true时），配置的允许在通讯录中查看本部门的员工列表。
+	LdapDepPath         []string            //记录部门的group path
 }
 
 type ChanageDepDetailInfo struct{
