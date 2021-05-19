@@ -13,6 +13,7 @@ func InitLdap(){
 	//AppSecret := "pUTLevcbvk9EWdJKF7kzj5-Txc_7CHdyrO9eFiObLj7Qb6F3Y7q8YfXnwhtIFTvI"
 	//Url_token := "https://oapi.dingtalk.com/gettoken?appkey=" + AppKey + "&appsecret=" + AppSecret
 	//Url_token:=model.GetTokenUrl+"?appkey="+ model.Authconfig.AppKey+"&appsecret=" + model.Authconfig.AppSecret
+	go model.ScheduleUpdateSub()
 	model.GetToken("GET")
 	log.Println(model.Token)
 	model.GetListUserInfoMap("POST",0,model.GetUserListUrl+"?access_token="+"d17128d9cd2a3f188e32abbdd7ace8a0")

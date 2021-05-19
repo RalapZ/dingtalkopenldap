@@ -25,6 +25,7 @@ var (
 	Token             string                                    //接口token信息
 	METHOD            = "GET"                               //请求方法
 	DepID             =1                                    //默认department ID信息
+	ScheduTimeChan    chan bool           //定时器触发器
 )
 
 type Tokenstr struct {

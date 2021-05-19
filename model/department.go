@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"strconv"
+	"time"
 )
 
 var (
@@ -147,4 +148,16 @@ func GroupCompareInfo(srcinfo DepDetailInfo, dstinfo DepDetailInfo) bool {
 		}
 	}
 	return true
+}
+
+func UpdataDepListIdAndDepListDetailInfo(){
+}
+
+func ScheduleUpdateSub(){
+	for{
+		select {
+		case <-time.After(time.Duration(Defaultconfig.SchedulerTime)):
+			UpdataDepListIdAndDepListDetailInfo()
+		}
+	}
 }

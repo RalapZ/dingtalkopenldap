@@ -51,6 +51,7 @@ type DBConfig struct {
 type  DefaultConfig struct{
 	StatusList string `yaml:"status_list"`
 	UserOffset string `yaml:"user_offset"`
+	SchedulerTime int   `yaml:"schedulertime"`
 }
 
 type Config struct {
