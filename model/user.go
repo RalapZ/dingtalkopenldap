@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 )
@@ -67,6 +68,9 @@ func GetListUserInfoMap(method string,offset int,url string){
 	body["status_list"]="2,3,5,-1"
 	body["offset"]= offset
 	atoi, err2 := strconv.Atoi(Defaultconfig.UserOffset)
+	fmt.Println("useroffset",Defaultconfig.UserOffset)
+	//atoi, err2 := strconv.Atoi("50")
+	//atoi := 50
 	if err2 !=nil {
 		log.Println(err2)
 	}
@@ -101,6 +105,9 @@ func GetUserDetailInfo(method string,UserID string, url string) {
 		log.Println(err)
 	}
 }
+
+
+
 
 
 func UserCompareInfo(srcuser UserDetailInfo,dstuser UserDetailInfo) bool{

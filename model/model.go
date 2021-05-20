@@ -2,6 +2,7 @@ package model
 
 import (
 	"bytes"
+	"encoding/gob"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -10,9 +11,11 @@ import (
 )
 const (
 	GetTokenUrl = "https://oapi.dingtalk.com/gettoken"                     //获取token信息接口
+	GetListSubIdUrl = "https://oapi.dingtalk.com/topapi/v2/department/listsubid" //获取部门list信息
 	GetDepDetailUrl = "https://oapi.dingtalk.com/topapi/v2/department/get"   //获取部门详细信息接口
 	GetUserListUrl="https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/queryonjob"    //获取用户list信息
 	GetUserDetailUrl="https://oapi.dingtalk.com/topapi/v2/user/get"  //获取部门详细信息
+
 
 )
 
@@ -83,6 +86,17 @@ func GetToken(method string) {
 	//return token
 }
 
-
+func Clone(a, b interface{}) error {
+	buff := new(bytes.Buffer)
+	enc := gob.NewEncoder(buff)
+	dec := gob.NewDecoder(buff)
+	if err := enc.Encode(a); err != nil {
+		return err
+	}
+	if err := dec.Decode(b); err != nil {
+		return err
+	}
+	return nil
+}
 
 

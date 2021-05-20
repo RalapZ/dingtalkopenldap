@@ -16,5 +16,6 @@ func init(){
 
 func main() {
 	command.InitLdap()
+	//http.ListenAndServe("127.0.0.1:9090",nil)
 	//fmt.Println("test",model.Userlist)
 }

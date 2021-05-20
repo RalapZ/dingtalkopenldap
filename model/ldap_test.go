@@ -1,6 +1,9 @@
 package model
 
 import (
+	"fmt"
+	"github.com/mozillazg/go-pinyin"
+	"gopkg.in/ldap.v2"
 	"testing"
 )
 
@@ -30,22 +33,55 @@ func TestInitLdapConnection(t *testing.T) {
 	//sr.Print()
 	//InitLdapConnection()
 	//LDAPservice.AddGroupinfo()
-
-	//sql := ldap.NewAddRequest("uid=test,ou=people,ou=it,dc=asinking,dc=com")
-	////sql := ldap.NewAddRequest("ou=供应链组,ou=产品部,ou=Staff,ou=Groups,o=AsinKing,dc=asinking,dc=com")
-	//
+	//hans := "zhur"
+	hans := "朱浩睿我的是"
+	convert := pinyin.Convert(hans, nil)
+	var fullname string
+	var secondname string
+ 	for _,k:=range convert{
+		fullname=fullname+k[0]
+	}
+	for i:=1;i<len(convert);i++{
+		secondname=secondname+convert[i][0]
+	}
+	firstname:=convert[0][0]
+	//sql := ldap.NewAddRequest("uid="+fullname+",ou=it,dc=asinking,dc=com")
+	//////sql := ldap.NewAddRequest("ou=供应链组,ou=产品部,ou=Staff,ou=Groups,o=AsinKing,dc=asinking,dc=com")
+	////
 	//sql.Attribute("uidNumber", []string{"1010"})
 	//sql.Attribute("gidNumber", []string{"1003"})
 	//sql.Attribute("userPassword", []string{"123456"})
 	//sql.Attribute("homeDirectory", []string{"/home/wujq"})
-	//sql.Attribute("cn", []string{"test"})
-	//sql.Attribute("uid", []string{"test"})
-	//sql.Attribute("objectClass", []string{"shadowAccount", "posixAccount", "account"})
-	////sql.Attribute("objectClass", []string{"inetOrgPerson","organizationalPerson","person","top"})
+	//sql.Attribute("mail", []string{"test@asinking.com"})
+	//sql.Attribute("cn", []string{fullname})
+	//sql.Attribute("givenName", []string{firstname})
+	//sql.Attribute("sn", []string{secondname})
+	//sql.Attribute("mobileTelephoneNumber", []string{"15711823061"})
+	////sql.Attribute("uid", []string{"test"})
+	//sql.Attribute("title", []string{"运维工程师"})
+	////sql.Attribute("objectClass", []string{"inetOrgPerson","shadowAccount", "posixAccount", "account"})
+	//sql.Attribute("objectClass", []string{"inetOrgPerson","organizationalPerson","posixAccount"})
 	//er := LDAPservice.Conn.Add(sql)
 	//if er!=nil{
 	//	fmt.Println(er)
 	//}
+
+
+
+
+	sql := ldap.NewAddRequest("mail="+fullname+"@asinking.com"+",ou=it,dc=asinking,dc=com")
+	sql.Attribute("userPassword", []string{"123456"})
+	sql.Attribute("mail", []string{"test@asinking.com"})
+	sql.Attribute("cn", []string{fullname})
+	sql.Attribute("givenName", []string{firstname})
+	sql.Attribute("sn", []string{secondname})
+	sql.Attribute("mobileTelephoneNumber", []string{"15711823061"})
+	sql.Attribute("uid", []string{"23134234234123412341234123"})
+	sql.Attribute("objectClass", []string{"inetOrgPerson","organizationalPerson"})
+	er := LDAPservice.Conn.Add(sql)
+	if er!=nil{
+		fmt.Println(er)
+	}
 
 }
 //

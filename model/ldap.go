@@ -2,9 +2,8 @@ package model
 
 import (
 	"fmt"
-	log  "github.com/sirupsen/logrus"
-	"strconv"
-
+	"github.com/mozillazg/go-pinyin"
+	log "github.com/sirupsen/logrus"
 	//"github.com/go-ldap/ldap/v3"
 	"gopkg.in/ldap.v2"
 )
@@ -38,7 +37,7 @@ func (ldapservice *LDAPService)AddGroupinfo(groupinfo DepDetailInfo) {
 	for _,k:=range StackDepmentinfo{
 		grouptempinfo="ou="+k+","+grouptempinfo
 	}
-	fmt.Println(grouptempinfo)
+	//fmt.Println(grouptempinfo)
 	sql := ldap.NewAddRequest(grouptempinfo+Ldapconfig.SearchDN)
 
 	sql.Attribute("ou", []string{StackDepmentinfo[len(StackDepmentinfo)-1]})
@@ -50,28 +49,63 @@ func (ldapservice *LDAPService)AddGroupinfo(groupinfo DepDetailInfo) {
 	log.Println()
 }
 
-
-func (ldapservice *LDAPService)AddUserinfo(userid int){
-	//var usertempinfo string
+func (ldapservice *LDAPService)AddUserinfo(userid string){
 	var userldappath string
-	for _,k:=range DepListDetailInfo[userid].LdapDepPath{
+	for _,k:=range DepListDetailInfo[UserListDetailInfo[userid].DeptOrderList[0].DeptId].LdapDepPath{
 		userldappath="ou="+k+","+userldappath
 	}
-	usertempinfo:=ldap.NewAddRequest("uid="+UserListDetailInfo[strconv.Itoa(userid)].Name+","+userldappath+Ldapconfig.SearchDN)
-	//sql := ldap.NewAddRequest("uid=test,ou=people,ou=it,dc=asinking,dc=com")
-	//sql := ldap.NewAddRequest("ou=供应链组,ou=产品部,ou=Staff,ou=Groups,o=AsinKing,dc=asinking,dc=com")
-	usertempinfo.Attribute("uidNumber", []string{UserListDetailInfo[strconv.Itoa(userid)].Userid})
-	usertempinfo.Attribute("gidNumber", []string{strconv.Itoa(UserListDetailInfo[strconv.Itoa(userid)].DeptOrderList[0].DeptId)})
+	//fmt.Println("userid",userid)
+	//fmt.Println("userdetailinfo",UserListDetailInfo[userid])
+	username := UserListDetailInfo[userid].Name
+	//fmt.Println("名字",username)
+	convert := pinyin.Convert(username, nil)
+	var fullname string
+	var secondname string
+	for _,k:=range convert{
+		fullname=fullname+k[0]
+	}
+	for i:=1;i<len(convert);i++{
+		secondname=secondname+convert[i][0]
+	}
+	//fmt.Println("ldap",convert)
+	firstname:=convert[0][0]
+	//fmt.Println("DNinfo",userldappath,Ldapconfig.SearchDN)
+	usertempinfo := ldap.NewAddRequest("mail="+UserListDetailInfo[userid].Email+","+userldappath+Ldapconfig.SearchDN)
+	////sql := ldap.NewAddRequest("ou=供应链组,ou=产品部,ou=Staff,ou=Groups,o=AsinKing,dc=asinking,dc=com")
+	//
+	//fmt.Println("uidnumber",UserListDetailInfo[userid].Userid)
+	//usertempinfo := ldap.NewAddRequest("mail="+fullname+"@asinking.com"+",ou=it,dc=asinking,dc=com")
 	usertempinfo.Attribute("userPassword", []string{"123456"})
-	usertempinfo.Attribute("homeDirectory", []string{"/home/"+UserListDetailInfo[strconv.Itoa(userid)].Name})
-	usertempinfo.Attribute("cn", []string{"test"})
-	usertempinfo.Attribute("uid", []string{UserListDetailInfo[strconv.Itoa(userid)].Userid})
-	usertempinfo.Attribute("objectClass", []string{"shadowAccount", "posixAccount", "account"})
-	//sql.Attribute("objectClass", []string{"inetOrgPerson","organizationalPerson","person","top"})
+	usertempinfo.Attribute("mail", []string{UserListDetailInfo[userid].Email})
+	usertempinfo.Attribute("cn", []string{fullname})
+	usertempinfo.Attribute("givenName", []string{firstname})
+	usertempinfo.Attribute("sn", []string{"朱"})
+	//fmt.Println(userid,UserListDetailInfo[userid].Mobile)
+	usertempinfo.Attribute("mobileTelephoneNumber", []string{UserListDetailInfo[userid].Mobile})
+	usertempinfo.Attribute("uid", []string{UserListDetailInfo[userid].Userid})
+	usertempinfo.Attribute("objectClass", []string{"inetOrgPerson","organizationalPerson"})
 	er := LDAPservice.Conn.Add(usertempinfo)
 	if er!=nil{
 		fmt.Println(er)
 	}
+	////usertempinfo.Attribute("uidNumber", []string{UserListDetailInfo[userid].Userid})
+	//usertempinfo.Attribute("uidNumber", []string{"1"})
+	//usertempinfo.Attribute("gidNumber", []string{strconv.Itoa(UserListDetailInfo[userid].DeptOrderList[0].DeptId)})
+	//usertempinfo.Attribute("userPassword", []string{"123456"})
+	//usertempinfo.Attribute("homeDirectory", []string{"/home/"+fullname})
+	//usertempinfo.Attribute("mail", []string{UserListDetailInfo[userid].Email})
+	//usertempinfo.Attribute("cn", []string{fullname})
+	//usertempinfo.Attribute("givenName", []string{firstname})
+	//usertempinfo.Attribute("sn", []string{secondname})
+	//usertempinfo.Attribute("mobileTelephoneNumber", []string{"15711823061"})
+	//usertempinfo.Attribute("title", []string{UserListDetailInfo[userid].Title})
+	//usertempinfo.Attribute("uid", []string{UserListDetailInfo[userid].Userid})
+	//usertempinfo.Attribute("objectClass", []string{"inetOrgPerson","organizationalPerson","posixAccount"})
+	//er := LDAPservice.Conn.Add(usertempinfo)
+	//if er!=nil{
+	//	log.Println(er)
+	//}
+
 }
 
 

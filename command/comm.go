@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"github.com/RalapZ/dingtalkopenldap/model"
 	"log"
 	"time"
@@ -16,17 +17,32 @@ func InitLdap(){
 	go model.ScheduleUpdateSub()
 	model.GetToken("GET")
 	log.Println(model.Token)
-	model.GetListUserInfoMap("POST",0,model.GetUserListUrl+"?access_token="+"d17128d9cd2a3f188e32abbdd7ace8a0")
-	UrlDepSubId := "https://oapi.dingtalk.com/topapi/v2/department/listsubid?access_token=" + model.Token
+
+	UrlDepSubId := model.GetListSubIdUrl+"?access_token=" + model.Token
 	//model.GetListSubId("POST",1 , UrlDepSubId)
 	model.InitListSubId("POST",1 , UrlDepSubId)
+	for k,v :=range model.DepListDetailInfo{
+		fmt.Println("print",k,v)
+	}
 	//GetListSubId
+
 	time.Sleep(1000*time.Microsecond)
 	log.Println(model.DepListId)
+
+	model.GetListUserInfoMap("POST",0,model.GetUserListUrl+"?access_token="+model.Token)
+	//fmt.Println("main",model.Userlist)
+	getuserdetailinfo:=model.GetUserDetailUrl+"?access_token="+model.Token
+	for _,v:= range model.Userlist{
+		model.GetUserDetailInfo("POST",v,getuserdetailinfo)
+	}
+	//
 	//for k,v:=range model.DepListDetailInfo{
 	//	log.Println(k,v)
 	//}
-	for k,v:=range model.UserListDetailInfo{
-		log.Println(k,v)
+	for _,v:=range model.Userlist{
+		model.LDAPservice.AddUserinfo(v)
 	}
+	//for k,v:=range model.UserListDetailInfo{
+	//	log.Println("test",k,v)
+	//}
 }

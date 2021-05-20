@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -13,6 +14,7 @@ var (
 	DepListDetailInfo  = make(map[int]DepDetailInfo) //department 详细信息
 	ChanageDepDetailch chan *ChanageDepDetailInfo
 	StackDepmentinfo   []string
+	n int
 )
 
 type ResponseListSubInfo struct {
@@ -74,6 +76,8 @@ type ResponseDepListSubId struct {
 
 //初始化组织信息的结构内存map信息,   待补充并发初始化数据
 func InitListSubId(method string, DepID int, url string) {
+	n++
+
 	body := make(map[string]interface{})
 	body["dept_id"] = DepID
 	str := UrlRequest(method, url, &body)
@@ -82,17 +86,30 @@ func InitListSubId(method string, DepID int, url string) {
 	if err != nil {
 		log.Println(err)
 	}
+
 	DepListId[DepID] = json_info.Result.DeptIdList //更新部门子部门map信息
+
 	info, err := GetSubDetailInfo("POST", DepID)
 	if err != nil {
 		log.Println(err)
 	}
+
 	if _, ok := DepListDetailInfo[DepID]; !ok {
+		for k,v:=range DepListDetailInfo{
+			fmt.Println("recycle10:",n,k,v)
+		}
+		fmt.Println(StackDepmentinfo)
 		StackDepmentinfo = append(StackDepmentinfo, info.Result.Name)
-		info.Result.LdapDepPath = StackDepmentinfo
+		fmt.Println(StackDepmentinfo)
+		for _,v:=range StackDepmentinfo{
+			//fmt.Println("v",v)
+			info.Result.LdapDepPath=append(info.Result.LdapDepPath,v)
+		}
+
 		DepListDetailInfo[DepID] = info.Result
 		LDAPservice.AddGroupinfo(DepListDetailInfo[DepID])
 	}
+
 	//更新部门部门详细信息到map
 	for _, v := range json_info.Result.DeptIdList {
 		InitListSubId(method, v, url)

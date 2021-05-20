@@ -8,5 +8,5 @@ func TestGetUserDetailInfo(t *testing.T) {
 	//GetUserDetailInfo("POST","012609262508120583", url1)
 	//url2:=GetUserListUrl+"?access_token="+"d17128d9cd2a3f188e32abbdd7ace8a0"
 	//GetListUserInfoMap("POST",0,url2)
-	GetListUserInfoMap("POST",0,GetUserListUrl+"?access_token="+"d17128d9cd2a3f188e32abbdd7ace8a0")
+	GetListUserInfoMap("POST",0,GetUserListUrl+"?access_token="+"576916ba412836bc8d0c8534055c0aa0")
 }
