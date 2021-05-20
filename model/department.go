@@ -3,8 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"strconv"
 	"time"
 )
@@ -95,17 +94,11 @@ func InitListSubId(method string, DepID int, url string) {
 	}
 
 	if _, ok := DepListDetailInfo[DepID]; !ok {
-		for k,v:=range DepListDetailInfo{
-			fmt.Println("recycle10:",n,k,v)
-		}
-		fmt.Println(StackDepmentinfo)
 		StackDepmentinfo = append(StackDepmentinfo, info.Result.Name)
-		fmt.Println(StackDepmentinfo)
+		//slice深度拷贝
 		for _,v:=range StackDepmentinfo{
-			//fmt.Println("v",v)
 			info.Result.LdapDepPath=append(info.Result.LdapDepPath,v)
 		}
-
 		DepListDetailInfo[DepID] = info.Result
 		LDAPservice.AddGroupinfo(DepListDetailInfo[DepID])
 	}

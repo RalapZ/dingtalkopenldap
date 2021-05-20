@@ -1,29 +1,22 @@
 package command
 
 import (
-	"fmt"
 	"github.com/RalapZ/dingtalkopenldap/model"
-	"log"
+	log "github.com/sirupsen/logrus"
+
 	"time"
 )
 
-func InitLdap(){
-	//fmt.Println(model.AuthConf, model.Listenconfig, model.Authconfig, model.Ldapconfig, model.DBconfig)
-	//model.InitLdapConnection()
-	//AppKey := "dingicgycuisw7lrqcj8"
-	//AppSecret := "pUTLevcbvk9EWdJKF7kzj5-Txc_7CHdyrO9eFiObLj7Qb6F3Y7q8YfXnwhtIFTvI"
-	//Url_token := "https://oapi.dingtalk.com/gettoken?appkey=" + AppKey + "&appsecret=" + AppSecret
-	//Url_token:=model.GetTokenUrl+"?appkey="+ model.Authconfig.AppKey+"&appsecret=" + model.Authconfig.AppSecret
-	go model.ScheduleUpdateSub()
+func Init(){
+	go model.ScheduleUpdateSub()//启动定时更新任务
 	model.GetToken("GET")
 	log.Println(model.Token)
-
 	UrlDepSubId := model.GetListSubIdUrl+"?access_token=" + model.Token
 	//model.GetListSubId("POST",1 , UrlDepSubId)
 	model.InitListSubId("POST",1 , UrlDepSubId)
-	for k,v :=range model.DepListDetailInfo{
-		fmt.Println("print",k,v)
-	}
+	//for k,v :=range model.DepListDetailInfo{
+	//	fmt.Println("print",k,v)
+	//}
 	//GetListSubId
 
 	time.Sleep(1000*time.Microsecond)
@@ -46,3 +39,4 @@ func InitLdap(){
 	//	log.Println("test",k,v)
 	//}
 }
+

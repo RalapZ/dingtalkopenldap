@@ -54,10 +54,7 @@ func (ldapservice *LDAPService)AddUserinfo(userid string){
 	for _,k:=range DepListDetailInfo[UserListDetailInfo[userid].DeptOrderList[0].DeptId].LdapDepPath{
 		userldappath="ou="+k+","+userldappath
 	}
-	//fmt.Println("userid",userid)
-	//fmt.Println("userdetailinfo",UserListDetailInfo[userid])
 	username := UserListDetailInfo[userid].Name
-	//fmt.Println("名字",username)
 	convert := pinyin.Convert(username, nil)
 	var fullname string
 	var secondname string
@@ -67,26 +64,20 @@ func (ldapservice *LDAPService)AddUserinfo(userid string){
 	for i:=1;i<len(convert);i++{
 		secondname=secondname+convert[i][0]
 	}
-	//fmt.Println("ldap",convert)
 	firstname:=convert[0][0]
-	//fmt.Println("DNinfo",userldappath,Ldapconfig.SearchDN)
 	usertempinfo := ldap.NewAddRequest("mail="+UserListDetailInfo[userid].Email+","+userldappath+Ldapconfig.SearchDN)
-	////sql := ldap.NewAddRequest("ou=供应链组,ou=产品部,ou=Staff,ou=Groups,o=AsinKing,dc=asinking,dc=com")
-	//
-	//fmt.Println("uidnumber",UserListDetailInfo[userid].Userid)
-	//usertempinfo := ldap.NewAddRequest("mail="+fullname+"@asinking.com"+",ou=it,dc=asinking,dc=com")
 	usertempinfo.Attribute("userPassword", []string{"123456"})
 	usertempinfo.Attribute("mail", []string{UserListDetailInfo[userid].Email})
 	usertempinfo.Attribute("cn", []string{fullname})
 	usertempinfo.Attribute("givenName", []string{firstname})
-	usertempinfo.Attribute("sn", []string{"朱"})
+	usertempinfo.Attribute("sn", []string{UserListDetailInfo[userid].Name})
 	//fmt.Println(userid,UserListDetailInfo[userid].Mobile)
 	usertempinfo.Attribute("mobileTelephoneNumber", []string{UserListDetailInfo[userid].Mobile})
 	usertempinfo.Attribute("uid", []string{UserListDetailInfo[userid].Userid})
 	usertempinfo.Attribute("objectClass", []string{"inetOrgPerson","organizationalPerson"})
 	er := LDAPservice.Conn.Add(usertempinfo)
 	if er!=nil{
-		fmt.Println(er)
+		log.Println(er)
 	}
 	////usertempinfo.Attribute("uidNumber", []string{UserListDetailInfo[userid].Userid})
 	//usertempinfo.Attribute("uidNumber", []string{"1"})
