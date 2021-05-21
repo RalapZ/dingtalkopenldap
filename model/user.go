@@ -9,6 +9,8 @@ import (
 var (
 	UserListDetailInfo     =make(map[string]UserDetailInfo)          //user 详细信息
 	Userlist   []string
+	InitFirst =1
+	UserChangeChan  chan string
 )
 
 
@@ -63,13 +65,66 @@ type ResponUserDetailinfo struct {
 //获取用户的list
 func GetListUserInfoMap(method string,offset int,url string){
 	body:= make(map[string]interface{})
-	//body["status_list"]=Defaultconfig.StatusList
 	body["status_list"]="2,3,5,-1"
 	body["offset"]= offset
 	atoi, err2 := strconv.Atoi(Defaultconfig.UserOffset)
-	//fmt.Println("useroffset",Defaultconfig.UserOffset)
-	//atoi, err2 := strconv.Atoi("50")
-	//atoi := 50
+	if err2 !=nil {
+		log.Error(err2)
+	}
+	body["size"] = atoi
+	str := UrlRequest(method, url,&body)
+	json_info := ResponUserInfo{}
+	err := json.Unmarshal(str, &json_info)
+	if err != nil {
+		log.Error(err)
+	}
+	if len(json_info.Result.DataList)!=0{
+		Userlist=append(Userlist,json_info.Result.DataList...)
+		//log.Println(Userlist)
+		GetListUserInfoMap(method ,offset+atoi,url)
+	}
+}
+
+//获取用户详细信息
+func GetUserDetailInfo(method string,UserID string, url string) *UserDetailInfo {
+	body:= make(map[string]interface{})
+	body["userid"]=UserID
+	str := UrlRequest(method, url,&body)
+	json_info := ResponUserDetailinfo{}
+	err := json.Unmarshal(str, &json_info)
+	if _,ok:=UserListDetailInfo[UserID];!ok {
+		UserListDetailInfo[UserID] = json_info.Result
+	}
+	//fmt.Println(json_info)
+	if err != nil {
+		log.Error(err)
+	}
+	return &json_info.Result
+}
+
+
+
+func UpdateUserInfo() {
+	if InitFirst==1{
+		for _, v := range Userlist {
+			LDAPservice.AddUserinfo(v)
+		}
+	}
+	for {
+		switch {
+		//case <-
+		default:
+			log.Info("test")
+		}
+	}
+}
+
+
+func CheckUserInfo(method string,offset int,url string){
+	body:= make(map[string]interface{})
+	body["status_list"]="2,3,5,-1"
+	body["offset"]= offset
+	atoi, err2 := strconv.Atoi(Defaultconfig.UserOffset)
 	if err2 !=nil {
 		log.Println(err2)
 	}
@@ -82,34 +137,25 @@ func GetListUserInfoMap(method string,offset int,url string){
 		log.Println(err)
 	}
 	if len(json_info.Result.DataList)!=0{
-		Userlist=append(Userlist,json_info.Result.DataList...)
-		log.Println(Userlist)
-		GetListUserInfoMap(method ,offset+atoi,url)
-	}
-}
-
-//获取用户详细信息
-func GetUserDetailInfo(method string,UserID string, url string) {
-	body:= make(map[string]interface{})
-	body["userid"]=UserID
-	str := UrlRequest(method, url,&body)
-	//body_json := err2
-	json_info := ResponUserDetailinfo{}
-	err := json.Unmarshal(str, &json_info)
-	if _,ok:=UserListDetailInfo[UserID];!ok {
-		UserListDetailInfo[UserID] = json_info.Result
-	}
-	//fmt.Println(json_info)
-	if err != nil {
-		log.Println(err)
+		for _,v:= range json_info.Result.DataList{
+			if _,ok:= UserListDetailInfo[v];ok{
+				getuserdetailinfo:=GetUserDetailUrl+"?access_token="+Token
+				newuserinfo:=GetUserDetailInfo("POST", v, getuserdetailinfo)
+				olduserinfo:=UserListDetailInfo[v]
+				info := UserCompareInfo(newuserinfo, olduserinfo)
+				if info==true{
+					log.Infof("change user info: userid is %v; new info is %v, old info is %v ",v,*newuserinfo,olduserinfo)
+					UserListDetailInfo[v]=*newuserinfo
+					UserChangeChan <- v
+				}
+			}
+		}
 	}
 }
 
 
 
-
-
-func UserCompareInfo(srcuser UserDetailInfo,dstuser UserDetailInfo) bool{
+func UserCompareInfo(srcuser *UserDetailInfo,dstuser UserDetailInfo) bool{
 	ComRe,_:= OrderIntArrayCompare(srcuser.DeptIdList, dstuser.DeptIdList)
 	if ComRe==false&&srcuser.Name==dstuser.Name && srcuser.Telephone==dstuser.Telephone && srcuser.Email==dstuser.Email{
 		return false
