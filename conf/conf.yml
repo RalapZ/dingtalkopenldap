@@ -1,7 +1,7 @@
 default:
   status_list: "2,3,5,-1"     #获取用户状态   2：试用期   3：正式    5：待离职    -1：无状态
   user_offset: 50           #偏移量 <=50
-  schedulertime: 600        #配置刷新时长
+  schedulertime: 10        #配置刷新时长
 
 
 listen:

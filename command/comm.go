@@ -1,15 +1,13 @@
 package command
 
 import (
-	"fmt"
 	"github.com/RalapZ/dingtalkopenldap/model"
 	"time"
 )
 
 func Start(){
 	go model.ScheduleUpdateSub()//启动定时更新任务
-	fmt.Println("test")
-	//go SchedulerTimeFunc()
+	go SchedulerTimeFunc()
 	model.GetToken("GET")
 	UrlDepSubId := model.GetListSubIdUrl+"?access_token=" + model.Token
 	model.InitListSubId("POST",1 , UrlDepSubId)
