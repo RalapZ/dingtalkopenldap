@@ -2,8 +2,11 @@ package model
 
 import (
 	"fmt"
+	//"github.com/RalapZ/dingtalkopenldap/tools"
 	"github.com/mozillazg/go-pinyin"
 	log "github.com/sirupsen/logrus"
+	"os"
+
 	//"github.com/go-ldap/ldap/v3"
 	"gopkg.in/ldap.v2"
 )
@@ -19,16 +22,21 @@ type LDAPService struct {
 
 func InitLdapConnection(){
 	conn, err := ldap.Dial("tcp", Ldapconfig.Addr)
-
 	if err!=nil{
-		panic(err)
+		log.Error("Ldap connected port error ")
+
+		os.Exit(3)
 	}
+	log.Info("Ldap connected port successfully")
 	LDAPservice=LDAPService{conn,Ldapconfig}
 	err = LDAPservice.Conn.Bind(Ldapconfig.BindUserName, Ldapconfig.BindPassword)
 	if err !=nil{
 		fmt.Println(err)
-		panic(err)
+		log.Error("Ldap authentication error ",err)
+		os.Exit(3)
+		//panic(err)
 	}
+	log.Info("Ldap  authentication successfully")
 }
 
 
@@ -39,14 +47,16 @@ func (ldapservice *LDAPService)AddGroupinfo(groupinfo DepDetailInfo) {
 	}
 	//fmt.Println(grouptempinfo)
 	sql := ldap.NewAddRequest(grouptempinfo+Ldapconfig.SearchDN)
-
 	sql.Attribute("ou", []string{StackDepmentinfo[len(StackDepmentinfo)-1]})
 	sql.Attribute("objectClass", []string{"organizationalUnit","top"})
 	er := LDAPservice.Conn.Add(sql)
 	if er!=nil{
-		log.Println(er)
+		log.Errorf("AddGroup  %s error  ",groupinfo.Name)
+		log.Error(er)
+	}else{
+		log.Infof("AddGroup %s  successfully",groupinfo.Name)
 	}
-	log.Println()
+	//log.Println()
 }
 
 func (ldapservice *LDAPService)AddUserinfo(userid string){
@@ -77,7 +87,10 @@ func (ldapservice *LDAPService)AddUserinfo(userid string){
 	usertempinfo.Attribute("objectClass", []string{"inetOrgPerson","organizationalPerson"})
 	er := LDAPservice.Conn.Add(usertempinfo)
 	if er!=nil{
-		log.Println(er)
+		log.Errorf("Add user  %s something error  ",UserListDetailInfo[userid].Name)
+		log.Error(er)
+	}else{
+		log.Infof("Add user %s  successfully",UserListDetailInfo[userid].Name)
 	}
 	////usertempinfo.Attribute("uidNumber", []string{UserListDetailInfo[userid].Userid})
 	//usertempinfo.Attribute("uidNumber", []string{"1"})

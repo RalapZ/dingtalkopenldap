@@ -25,7 +25,9 @@ type logFileWriter struct {
 
 //格式详情
 func (s *LogFormatter) Format(entry *log.Entry) ([]byte, error) {
-	timestamp := time.Now().Local().Format("0102-150405.000")
+	//timestamp := time.Now().Local().Format("0102-150405.000")
+	timestamp := time.Now().Local().Format("2006-01-02 15:04:05")
+
 	var file string
 	var len int
 	if entry.Caller != nil {
