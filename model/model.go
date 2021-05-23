@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
+	log "github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
-	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 const (
@@ -40,16 +40,17 @@ type Tokenstr struct {
 }
 
 
-func UrlRequest(method string, url string, body *map[string]interface{}) []byte {
+func UrlRequest(method string, url string, body *map[string]interface{}) ([]byte,error) {
 	C := &http.Client{}
 	var bodyinfo io.Reader=nil
 	if body != nil {
-		for k, v := range *body {
-			log.Println(k, v)
-		}
+		//for k, v := range *body {
+		//	log.Println(k, v)
+		//}
 		json_body,err:=json.Marshal(body)
 		if err != nil{
 			log.Println(err)
+			return nil,err
 		}else{
 			bodyinfo=bytes.NewReader(json_body)
 		}
@@ -57,25 +58,26 @@ func UrlRequest(method string, url string, body *map[string]interface{}) []byte 
 
 	resq, err := http.NewRequest(method, url, bodyinfo)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
+		return nil,err
 	}
 	//defer resq.Body.Close()
 
 	res, err := C.Do(resq)
 	defer res.Body.Close()
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
 	str, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
-	return str
+	return str,nil
 }
 
 func GetToken(method string) {
 	Url_token:=GetTokenUrl+"?appkey="+ Authconfig.AppKey+"&appsecret=" + Authconfig.AppSecret
-	str := UrlRequest(method, Url_token, nil)
+	str,_ := UrlRequest(method, Url_token, nil)
 	json_info := Tokenstr{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {

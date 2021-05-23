@@ -1,7 +1,7 @@
 default:
   status_list: "2,3,5,-1"     #获取用户状态   2：试用期   3：正式    5：待离职    -1：无状态
   user_offset: 50           #偏移量 <=50
-  schedulertime: 10        #配置刷新时长
+  schedulertime: 5        #配置刷新时长
 
 
 listen:
@@ -17,13 +17,12 @@ authentication:
   appsecret: pUTLevcbvk9EWdJKF7kzj5-Txc_7CHdyrO9eFiObLj7Qb6F3Y7q8YfXnwhtIFTvI
 
 ldap:
-  addr :  192.168.137.201:389     #server  IP+port
-  bindUserName:   cn=manager,dc=asinking,dc=com
-#  bindUserName:   cn=admin,dc=asinking,dc=com
-  bindPassword:  1qaz@WSX
-#  bindPassword: 123
-
-
+  addr: 127.0.0.1:389     #server  IP+port
+  bindUserName:   cn=admin,dc=asinking,dc=com
+  bindPassword: 123
+#  addr :  192.168.137.201:389     #server  IP+port
+#  bindUserName:   cn=manager,dc=asinking,dc=com
+#  bindPassword:  1qaz@WSX
   searchdn:  dc=asinking,dc=com
 #  url: 10.48.8.15:1389     #server  IP+port
 #  user: anyconnect

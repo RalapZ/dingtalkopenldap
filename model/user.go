@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 )
@@ -10,7 +11,7 @@ var (
 	UserListDetailInfo     =make(map[string]UserDetailInfo)          //user 详细信息
 	Userlist   []string
 	InitFirst =1
-	UserChangeChan  chan string
+	UserChangeChan = make(chan string,1)
 )
 
 
@@ -72,7 +73,7 @@ func GetListUserInfoMap(method string,offset int,url string){
 		log.Error(err2)
 	}
 	body["size"] = atoi
-	str := UrlRequest(method, url,&body)
+	str ,_:= UrlRequest(method, url,&body)
 	json_info := ResponUserInfo{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
@@ -89,7 +90,7 @@ func GetListUserInfoMap(method string,offset int,url string){
 func GetUserDetailInfo(method string,UserID string, url string) *UserDetailInfo {
 	body:= make(map[string]interface{})
 	body["userid"]=UserID
-	str := UrlRequest(method, url,&body)
+	str ,_:= UrlRequest(method, url,&body)
 	json_info := ResponUserDetailinfo{}
 	err := json.Unmarshal(str, &json_info)
 	if _,ok:=UserListDetailInfo[UserID];!ok {
@@ -111,30 +112,32 @@ func UpdateUserInfo() {
 		}
 	}
 	for {
-		switch {
-		//case <-
-		default:
-			log.Info("test")
+		select {
+		case changeuserid:=<- UserChangeChan:
+			fmt.Println(changeuserid,"UpdateUserInfo:",UserListDetailInfo[changeuserid])
+		//default:
+		//	log.Info("model user test")
 		}
 	}
 }
 
 
 func CheckUserInfo(method string,offset int,url string){
+	checkoffset:=Defaultconfig.UserOffset
 	body:= make(map[string]interface{})
 	body["status_list"]="2,3,5,-1"
 	body["offset"]= offset
-	atoi, err2 := strconv.Atoi(Defaultconfig.UserOffset)
+	atoi, err2 := strconv.Atoi(checkoffset)
 	if err2 !=nil {
-		log.Println(err2)
+		log.Error(err2)
 	}
 	body["size"] = atoi
-	str := UrlRequest(method, url,&body)
+	str,_ := UrlRequest(method, url,&body)
 	//body_json := err2
 	json_info := ResponUserInfo{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
 	if len(json_info.Result.DataList)!=0{
 		for _,v:= range json_info.Result.DataList{
@@ -142,14 +145,21 @@ func CheckUserInfo(method string,offset int,url string){
 				getuserdetailinfo:=GetUserDetailUrl+"?access_token="+Token
 				newuserinfo:=GetUserDetailInfo("POST", v, getuserdetailinfo)
 				olduserinfo:=UserListDetailInfo[v]
+				log.Infof("compare %v and %v ",newuserinfo,olduserinfo)
 				info := UserCompareInfo(newuserinfo, olduserinfo)
-				if info==true{
+
+				if info == true{
 					log.Infof("change user info: userid is %v; new info is %v, old info is %v ",v,*newuserinfo,olduserinfo)
 					UserListDetailInfo[v]=*newuserinfo
+					fmt.Println("user id change ", v)
 					UserChangeChan <- v
+					fmt.Println("CheckUserInfo",info,newuserinfo.Email,olduserinfo.Email)
+				}else{
+					log.Infof("%v info is not changed,%v",v,olduserinfo)
 				}
 			}
 		}
+		CheckUserInfo(method ,offset+atoi,url)
 	}
 }
 

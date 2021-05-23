@@ -10,3 +10,12 @@ func TestGetUserDetailInfo(t *testing.T) {
 	//GetListUserInfoMap("POST",0,url2)
 	GetListUserInfoMap("POST",0,GetUserListUrl+"?access_token="+"576916ba412836bc8d0c8534055c0aa0")
 }
+
+func TestCheckUserInfo(t *testing.T) {
+	test:="https://oapi.dingtalk.com/topapi/smartwork/hrm/employee/queryonjob?access_token="+"ec59a699580e353eaac38318e7ca08a6"
+	//setConf()
+	for {
+		CheckUserInfo("POST",0,test)
+	}
+
+}

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	log "github.com/sirupsen/logrus"
+	"os"
 	"strconv"
-	"time"
 )
 
 var (
@@ -75,23 +75,22 @@ type ResponseDepListSubId struct {
 
 //初始化组织信息的结构内存map信息,   待补充并发初始化数据
 func InitListSubId(method string, DepID int, url string) {
-	n++
-
+	//fmt.Println("initlistsubid",DepListId)
 	body := make(map[string]interface{})
 	body["dept_id"] = DepID
-	str := UrlRequest(method, url, &body)
+	str,_ := UrlRequest(method, url, &body)
 	json_info := ResponseDepListSubId{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
-
 	DepListId[DepID] = json_info.Result.DeptIdList //更新部门子部门map信息
-
 	info, err := GetSubDetailInfo("POST", DepID)
 	if err != nil {
-		log.Println(err)
+		log.Error(err,info)
+		os.Exit(3)
 	}
+	//if info.
 
 	if _, ok := DepListDetailInfo[DepID]; !ok {
 		StackDepmentinfo = append(StackDepmentinfo, info.Result.Name)
@@ -114,30 +113,31 @@ func InitListSubId(method string, DepID int, url string) {
 func GetListSubId(method string, DepID int, url string) {
 	body := make(map[string]interface{})
 	body["dept_id"] = DepID
-	str := UrlRequest(method, url, &body)
+	str ,_:= UrlRequest(method, url, &body)
 	json_info := ResponseDepListSubId{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
 }
 
 func GetListSub(method string, url string) []SubInfo {
-	str := UrlRequest(method, url, nil)
+	str ,_:= UrlRequest(method, url, nil)
 	json_info := ResponseListSubInfo{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
 	return json_info.Department
 }
 
 func GetSubDetailInfo(method string, DepID int) (ResponseDepDetailInter, error) {
 	UrlDepDetail := GetDepDetailUrl + "?access_token=" + Token + "&dept_id=" + strconv.Itoa(DepID)
-	str := UrlRequest(method, UrlDepDetail, nil)
+	str ,_:= UrlRequest(method, UrlDepDetail, nil)
 	json_info := ResponseDepDetailInter{}
 	err := json.Unmarshal(str, &json_info)
 	if err != nil {
+		log.Error(err)
 		return json_info, err
 	}
 	if json_info.Errcode != 0 {
@@ -161,13 +161,4 @@ func GroupCompareInfo(srcinfo DepDetailInfo, dstinfo DepDetailInfo) bool {
 }
 
 func UpdataDepListIdAndDepListDetailInfo(){
-}
-
-func ScheduleUpdateSub(){
-	for{
-		select {
-		case <-time.After(time.Duration(Defaultconfig.SchedulerTime)):
-			UpdataDepListIdAndDepListDetailInfo()
-		}
-	}
 }
