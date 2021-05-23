@@ -1,7 +1,6 @@
 package command
 
 import (
-	"fmt"
 	"github.com/RalapZ/dingtalkopenldap/model"
 	log "github.com/sirupsen/logrus"
 	"time"
@@ -24,8 +23,6 @@ func SchedulerTimeFunc(){
 }
 
 
-
-
 func ScheduleUpdateSub(){
 	for{
 		select {
@@ -35,19 +32,17 @@ func ScheduleUpdateSub(){
 	}
 }
 
-
+//goroutine检测user info是否更新
 func ChangeUserInfoFunc(){
 		go func() {
 			for {
 				select {
 				case userid := <-model.UserChangeChan:
-					fmt.Println("ChangeUserInfoFunc","user id change ", userid)
+					//fmt.Println("ChangeUserInfoFunc","user id change ", userid)
 					model.LDAPservice.ModifyUserinfo(userid)
 				default:
 					time.Sleep(100*time.Millisecond)
-					//fmt.Println("ChangeUserInfoFunc")
 				}
-				//fmt.Println("ChangeUserInfoFunc")
 			}
 		}()
 }

@@ -56,6 +56,7 @@ func (ldapservice *LDAPService)AddGroupinfo(groupinfo DepDetailInfo) {
 	}else{
 		log.Infof("AddGroup %s  successfully",groupinfo.Name)
 	}
+	log.Infof("add group %v info into ldap successfully ",groupinfo.Name)
 	//log.Println()
 }
 
@@ -76,6 +77,7 @@ func (ldapservice *LDAPService)ModifyGroupinfo(groupinfo DepDetailInfo) {
 	}else{
 		log.Infof("AddGroup %s  successfully",groupinfo.Name)
 	}
+	log.Infof("modify group %v successfully",groupinfo.Name)
 	//log.Println()
 }
 
@@ -113,6 +115,7 @@ func (ldapservice *LDAPService)AddUserinfo(userid string){
 	}else{
 		log.Infof("Add user %s  successfully",UserListDetailInfo[userid].Name)
 	}
+	log.Infof("add user %v into ldap successfully",UserListDetailInfo[userid].Name)
 	////usertempinfo.Attribute("uidNumber", []string{UserListDetailInfo[userid].Userid})
 	//usertempinfo.Attribute("uidNumber", []string{"1"})
 	//usertempinfo.Attribute("gidNumber", []string{strconv.Itoa(UserListDetailInfo[userid].DeptOrderList[0].DeptId)})

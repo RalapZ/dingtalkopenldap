@@ -1,10 +1,10 @@
 package model
 
 import (
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"os"
 )
 
 var (
@@ -63,29 +63,31 @@ type Config struct {
 }
 
 func InitConfig() {
-	//fmt.Println(os.Getwd())
 	setConf()
 }
 
 func setConf() {
 	filePath := WorkDir + "/conf/conf.yml"
 	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
-		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
+		log.Error("fail to read configuration: %s", filePath)
+		os.Exit(4)
 	} else {
-		// configuration := gjson.ParseBytes(configurationContent)
 		config := Config{}
 		err := yaml.Unmarshal(configurationContent, &config)
 		if err != nil {
-			log.Printf("conf: %s, error: %v", configurationContent, err)
+			log.Errorf("conf: %s, error: %v", configurationContent, err)
 		}
-		//fmt.Println(config)
-		//fmt.Println(config)
-		//AuthConf=conf
 		Defaultconfig=config.DefaultConfig
+		log.Info("default section info :",Defaultconfig)
 		Listenconfig =config.Listen
+		log.Info("Listen section info :",Listenconfig)
 		Authconfig =config.Authentication
+		log.Info("Auth section info :",Authconfig)
 		Ldapconfig =config.LdapConfig
+		log.Info("Ldap section info :",Ldapconfig)
 		DBconfig =config.DBConfig
+		log.Info("db section info :",DBconfig)
+
 		// listen
 		//if config. != 0 {
 		//	ServerPort = config.Conf.Listen.Port

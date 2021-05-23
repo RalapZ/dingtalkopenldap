@@ -141,13 +141,13 @@ func CheckUserInfo(method string,offset int,url string){
 	}
 	if len(json_info.Result.DataList)!=0{
 		for _,v:= range json_info.Result.DataList{
+			//判断用户是否在list中
 			if _,ok:= UserListDetailInfo[v];ok{
 				getuserdetailinfo:=GetUserDetailUrl+"?access_token="+Token
 				newuserinfo:=GetUserDetailInfo("POST", v, getuserdetailinfo)
 				olduserinfo:=UserListDetailInfo[v]
 				log.Infof("compare %v and %v ",newuserinfo,olduserinfo)
 				info := UserCompareInfo(newuserinfo, olduserinfo)
-
 				if info == true{
 					log.Infof("change user info: userid is %v; new info is %v, old info is %v ",v,*newuserinfo,olduserinfo)
 					UserListDetailInfo[v]=*newuserinfo
@@ -157,6 +157,10 @@ func CheckUserInfo(method string,offset int,url string){
 				}else{
 					log.Infof("%v info is not changed,%v",v,olduserinfo)
 				}
+			}else{
+				Userlist=append(Userlist,v)
+				getuserdetailinfo:=GetUserDetailUrl+"?access_token="+Token
+				GetUserDetailInfo("POST", v, getuserdetailinfo)
 			}
 		}
 		CheckUserInfo(method ,offset+atoi,url)

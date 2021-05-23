@@ -85,6 +85,7 @@ func InitListSubId(method string, DepID int, url string) {
 		log.Error(err)
 	}
 	DepListId[DepID] = json_info.Result.DeptIdList //更新部门子部门map信息
+
 	info, err := GetSubDetailInfo("POST", DepID)
 	if err != nil {
 		log.Error(err,info)

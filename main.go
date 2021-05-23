@@ -17,10 +17,7 @@ func init(){
 }
 
 func main() {
-	//fmt.Println("Test")
 	command.Start()
-	//fmt.Println("Test")
-	//log.Info("测试中文")
 	http.ListenAndServe("127.0.0.1:9090",nil)
 	//fmt.Println("test",model.Userlist)
 }
