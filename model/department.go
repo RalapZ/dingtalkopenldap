@@ -85,14 +85,12 @@ func InitListSubId(method string, DepID int, url string) {
 		log.Error(err)
 	}
 	DepListId[DepID] = json_info.Result.DeptIdList //更新部门子部门map信息
-
 	info, err := GetSubDetailInfo("POST", DepID)
 	if err != nil {
 		log.Error(err,info)
 		os.Exit(3)
 	}
 	//if info.
-
 	if _, ok := DepListDetailInfo[DepID]; !ok {
 		StackDepmentinfo = append(StackDepmentinfo, info.Result.Name)
 		//slice深度拷贝
@@ -161,5 +159,36 @@ func GroupCompareInfo(srcinfo DepDetailInfo, dstinfo DepDetailInfo) bool {
 	return true
 }
 
-func UpdataDepListIdAndDepListDetailInfo(){
+func UpdataDepListIdAndDepListDetailInfo(method string, DepID int, url string){
+	body := make(map[string]interface{})
+	body["dept_id"] = DepID
+	str,_ := UrlRequest(method, url, &body)
+	json_info := ResponseDepListSubId{}
+	err := json.Unmarshal(str, &json_info)
+	if err != nil {
+		log.Error(err)
+	}
+
+	DepListId[DepID] = json_info.Result.DeptIdList //更新部门子部门map信息
+	info, err := GetSubDetailInfo("POST", DepID)
+	if err != nil {
+		log.Error(err,info)
+		os.Exit(3)
+	}
+	//if info.
+	if _, ok := DepListDetailInfo[DepID]; !ok {
+		StackDepmentinfo = append(StackDepmentinfo, info.Result.Name)
+		//slice深度拷贝
+		for _,v:=range StackDepmentinfo{
+			info.Result.LdapDepPath=append(info.Result.LdapDepPath,v)
+		}
+		DepListDetailInfo[DepID] = info.Result
+		LDAPservice.AddGroupinfo(DepListDetailInfo[DepID])
+	}
+
+	//更新部门部门详细信息到map
+	for _, v := range json_info.Result.DeptIdList {
+		UpdataDepListIdAndDepListDetailInfo(method, v, url)
+		StackDepmentinfo = StackDepmentinfo[:len(StackDepmentinfo)-1]
+	}
 }
