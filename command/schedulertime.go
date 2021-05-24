@@ -28,7 +28,8 @@ func ScheduleUpdateSub(){
 	for{
 		select {
 		case <-time.After(time.Duration(model.Defaultconfig.SchedulerTime)):
-			model.UpdataDepListIdAndDepListDetailInfo()
+			UrlDepSubId := model.GetListSubIdUrl+"?access_token=" + model.Token
+			model.UpdataDepListIdAndDepListDetailInfo("POST",1 , UrlDepSubId)
 		}
 	}
 }
