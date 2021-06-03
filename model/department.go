@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"strconv"
@@ -106,6 +107,8 @@ func InitListSubId(method string, DepID int, url string) {
 		InitListSubId(method, v, url)
 		StackDepmentinfo = StackDepmentinfo[:len(StackDepmentinfo)-1]
 	}
+	fmt.Println("init",StackDepmentinfo)
+
 }
 
 //获取列表信息
@@ -168,7 +171,6 @@ func UpdataDepListIdAndDepListDetailInfo(method string, DepID int, url string){
 	if err != nil {
 		log.Error(err)
 	}
-
 	DepListId[DepID] = json_info.Result.DeptIdList //更新部门子部门map信息
 	info, err := GetSubDetailInfo("POST", DepID)
 	if err != nil {
@@ -176,7 +178,8 @@ func UpdataDepListIdAndDepListDetailInfo(method string, DepID int, url string){
 		os.Exit(3)
 	}
 	//if info.
-	if _, ok := DepListDetailInfo[DepID]; !ok {
+	var ok bool
+	if _, ok = DepListDetailInfo[DepID]; !ok {
 		StackDepmentinfo = append(StackDepmentinfo, info.Result.Name)
 		//slice深度拷贝
 		for _,v:=range StackDepmentinfo{
@@ -185,10 +188,17 @@ func UpdataDepListIdAndDepListDetailInfo(method string, DepID int, url string){
 		DepListDetailInfo[DepID] = info.Result
 		LDAPservice.AddGroupinfo(DepListDetailInfo[DepID])
 	}
-
+	StackDepmentinfo = append(StackDepmentinfo, info.Result.Name)
+	//fmt.Println(StackDepmentinfo)
 	//更新部门部门详细信息到map
 	for _, v := range json_info.Result.DeptIdList {
 		UpdataDepListIdAndDepListDetailInfo(method, v, url)
+		//if !ok {
 		StackDepmentinfo = StackDepmentinfo[:len(StackDepmentinfo)-1]
+		//}
 	}
+	//StackDepmentinfo = StackDepmentinfo[:len(StackDepmentinfo)-1]
+	fmt.Println("update",StackDepmentinfo)
+
+
 }
