@@ -18,15 +18,15 @@ authentication:
 
 ldap:
   addr: 127.0.0.1:389     #server  IP+port
-  bindUserName:   cn=admin,dc=xxxx,dc=com
+  bindUserName:   cn=xxxx,dc=xxx,dc=com
   bindPassword: 123
   #  addr :  192.168.137.201:389     #server  IP+port
   #  bindUserName:   cn=manager,dc=xxx,dc=com
   #  bindPassword:  1qaz@WSX
   searchdn:  dc=xxx,dc=com
-#  url: 10.48.8.15:1389     #server  IP+port
-#  user: anyconnect
-#  password: test123
+#  url: xx.xx.x.xx:1389     #server  IP+port
+#  user: xxxx
+#  password: xxxxx
 
 DB:
   dbtype: mysql    #db type , for example  mysql/postpre and so on
