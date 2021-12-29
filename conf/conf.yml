@@ -1,0 +1,35 @@
+default:
+  status_list: "2,3,5,-1"     #获取用户状态   2：试用期   3：正式    5：待离职    -1：无状态
+  user_offset: 50           #偏移量 <=50
+  schedulertime: 5        #配置刷新时长
+
+
+listen:
+  host: 0.0.0.0     #  listening ip or host name
+  port: 9000          #  listening port
+
+log:
+  error_log:
+    level: warn       # supports levels, lower to higher: debug, info, warn, error, panic, fatal
+    file_path: logs/error.log
+authentication:
+  appkey: dingicgycuisw7lrqcj8
+  appsecret: pUTLevcbvk9EWdJKF7kzj5-Txc_7CHdyrO9eFiObLj7Qb6F3Y7q8YfXnwhtIFTvI
+
+ldap:
+  addr: 127.0.0.1:389     #server  IP+port
+  bindUserName:   cn=admin,dc=asinking,dc=com
+  bindPassword: 123
+#  addr :  192.168.137.201:389     #server  IP+port
+#  bindUserName:   cn=manager,dc=asinking,dc=com
+#  bindPassword:  1qaz@WSX
+  searchdn:  dc=asinking,dc=com
+#  url: 10.48.8.15:1389     #server  IP+port
+#  user: anyconnect
+#  password: test123
+
+DB:
+  dbtype: mysql    #db type , for example  mysql/postpre and so on
+  username: user
+  password: word
+  dbname  : name
